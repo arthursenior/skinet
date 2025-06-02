@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36121.58 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "skynet.api", "skynet.api\skynet.api.csproj", "{008020F7-26B3-4285-A1B4-83BC4BA755F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{104172FA-F7BF-463A-A7BE-DE760263B2DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infra", "Infra\Infra.csproj", "{6BFAA2F8-7BD9-47BE-956B-30420095594D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{008020F7-26B3-4285-A1B4-83BC4BA755F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{008020F7-26B3-4285-A1B4-83BC4BA755F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{008020F7-26B3-4285-A1B4-83BC4BA755F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{008020F7-26B3-4285-A1B4-83BC4BA755F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{104172FA-F7BF-463A-A7BE-DE760263B2DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{104172FA-F7BF-463A-A7BE-DE760263B2DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{104172FA-F7BF-463A-A7BE-DE760263B2DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{104172FA-F7BF-463A-A7BE-DE760263B2DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BFAA2F8-7BD9-47BE-956B-30420095594D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BFAA2F8-7BD9-47BE-956B-30420095594D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BFAA2F8-7BD9-47BE-956B-30420095594D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BFAA2F8-7BD9-47BE-956B-30420095594D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {875A8956-1E33-414F-AFE4-7449F281095F}
+	EndGlobalSection
+EndGlobal
