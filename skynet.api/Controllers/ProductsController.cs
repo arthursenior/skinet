@@ -1,4 +1,5 @@
 ﻿using Core.Entities;
+using Core.Interfaces;
 using Infra.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,25 +9,19 @@ namespace skynet.api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : ControllerBase
+    public class ProductsController(IProductRepository repo) : ControllerBase
     {
-        private readonly StoreContext storeContext;
-
-        public ProductsController(StoreContext storeContext)
-        {
-            this.storeContext = storeContext;
-        }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IReadOnlyList<Product>>> GetProducts(string? brand, string? type, string? sort)
         {
-           return await storeContext.Products.ToListAsync();
+           return Ok(await repo.GetProductsAsync(brand, type, sort));
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
-            var product = await storeContext.Products.FindAsync(id);
+            var product = await repo.GetProductByIdAsync(id);
             if (product == null)
             {
                 return NotFound();
@@ -34,16 +29,29 @@ namespace skynet.api.Controllers
             return product;
         }
 
+        [HttpGet("brands")]
+        public async Task<ActionResult<IReadOnlyList<string>>> GetBrands()
+        {
+            return Ok(await repo.GetBrandsAsync());
+        }
+
+        [HttpGet("types")]
+        public async Task<ActionResult<IReadOnlyList<string>>> GetTypes()
+        {
+            return Ok(await repo.GetTypesAsync());
+        }
+
+
         [HttpPost]
         public async Task<ActionResult<Product>> CreateProduct(Product product)
-        {
-            if (product == null)
+        { 
+            repo.AddProduct(product);
+
+            if (await repo.SaveChangesAsync())
             {
-                return BadRequest("Product cannot be null");
+                return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
             }
-            storeContext.Products.Add(product);
-            await storeContext.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
+            return BadRequest("Could not create product");
         }
 
         [HttpPut("{id:int}")]
@@ -55,28 +63,36 @@ namespace skynet.api.Controllers
             {
                 return BadRequest("Cannot update this product");
             }
-            storeContext.Entry(product).State = EntityState.Modified;
+            repo.UpdateProduct(product);
 
-            await storeContext.SaveChangesAsync();
-            return NoContent();
+            if (await repo.SaveChangesAsync())
+            {
+                return NoContent();
+            }
+            return BadRequest("Could not update product");
+
         }
 
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var product = await storeContext.Products.FindAsync(id);
+            var product = await repo.GetProductByIdAsync(id);
             if (product == null)
             {
                 return NotFound();
             }
-            storeContext.Products.Remove(product);
-            await storeContext.SaveChangesAsync();
-            return NoContent();
+            repo.DeleteProduct(product);
+
+            if (await repo.SaveChangesAsync())
+            {
+                return NoContent();
+            }
+            return BadRequest("Could not delete product");
         }
 
         private bool ProductExists(int id)
         {
-            return storeContext.Products.Any(e => e.Id == id);
+            return repo.ProductExists(id);
         }
     }
 }
