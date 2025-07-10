@@ -1,6 +1,7 @@
 using Core.Interfaces;
 using Infra.Data;
 using Microsoft.EntityFrameworkCore;
+using skynet.api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +21,14 @@ builder.Services.AddScoped(typeof(IGenereciRepository<>), typeof(GenereciReposit
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors();
+
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod()
+   .WithOrigins("http://localhost:4200", "https://localhost:4200"));
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
