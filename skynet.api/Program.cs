@@ -2,6 +2,7 @@ using Core.Interfaces;
 using Infra.Data;
 using Microsoft.EntityFrameworkCore;
 using skynet.api.Middleware;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors();
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
+{
+    var connString = builder.Configuration.GetConnectionString("Redis") ?? throw new Exception("Cannot get Redis connection string.");
+    var configuration = ConfigurationOptions.Parse(connString,true);
+    return ConnectionMultiplexer.Connect(configuration);
+});
 
 var app = builder.Build();
 
