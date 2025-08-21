@@ -1,5 +1,6 @@
 using Core.Interfaces;
 using Infra.Data;
+using Infra.Services;
 using Microsoft.EntityFrameworkCore;
 using skynet.api.Middleware;
 using StackExchange.Redis;
@@ -24,12 +25,16 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors();
 
-builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
+
+var redisConnString = builder.Configuration["AppSettings:MamuConnection"]
+                       ?? throw new Exception("Cannot get Redis connection string.");
+
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
 {
-    var connString = builder.Configuration.GetConnectionString("Redis") ?? throw new Exception("Cannot get Redis connection string.");
-    var configuration = ConfigurationOptions.Parse(connString,true);
-    return ConnectionMultiplexer.Connect(configuration);
+    return ConnectionMultiplexer.Connect(redisConnString);
 });
+
+builder.Services.AddSingleton<ICartService, CartService>();
 
 var app = builder.Build();
 
